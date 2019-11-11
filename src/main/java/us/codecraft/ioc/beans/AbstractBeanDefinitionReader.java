@@ -1,4 +1,9 @@
 package us.codecraft.ioc.beans;
+import	java.util.HashMap;
+
+import us.codecraft.ioc.beans.io.ResourceLoader;
+
+import java.util.Map;
 
 /**
  * @author cuixianing。
@@ -9,5 +14,20 @@ package us.codecraft.ioc.beans;
  */
 public abstract class AbstractBeanDefinitionReader implements BeanDefinitionReader{
 
-    //private Map<String, >
+    private Map<String, BeanDefinition> registry;
+
+    private ResourceLoader resourceLoader;
+
+    public AbstractBeanDefinitionReader(ResourceLoader resourceLoader) {
+        this.registry = new HashMap<> ();
+        this.resourceLoader = resourceLoader;
+    }
+
+    public Map<String, BeanDefinition> getRegistry() {
+        return registry;
+    }
+
+    public ResourceLoader getResourceLoader() {
+        return resourceLoader;
+    }
 }
