@@ -1,6 +1,9 @@
 package us.codecraft.ioc.aop;
 
+import org.junit.Assert;
 import org.junit.Test;
+import us.codecraft.ioc.HelloWorldService;
+import us.codecraft.ioc.HelloWorldServiceImpl;
 
 /**
  * @author cuixianing。
@@ -13,7 +16,21 @@ public class AspectjExpressionPoitcutTest {
 
     @Test
     public void testClassFilter() {
-        String expression = "execution(* us.codecraft.ioc.*.*(..))";
 
+        String expression = "execution(* us.codecraft.ioc.*.*(..))";
+        AspectjExpressionPointcut aspectjExpressionPointcut = new AspectjExpressionPointcut();
+        aspectjExpressionPointcut.setExpression(expression);
+        boolean matches = aspectjExpressionPointcut.getClassFilter().matches(HelloWorldService.class);
+        ClassFilter classFilter = aspectjExpressionPointcut.getClassFilter();
+        Assert.assertTrue(matches);
+    }
+
+    @Test
+    public void testMethodInterceptor() throws NoSuchMethodException {
+        String expression = "execution(* us.codecraft.ioc.*.*(..))";
+        AspectjExpressionPointcut aspectjExpressionPointcut = new AspectjExpressionPointcut();
+        aspectjExpressionPointcut.setExpression(expression);
+        boolean helloWorld = aspectjExpressionPointcut.getMethodMatcher().matches(HelloWorldService.class.getDeclaredMethod("helloWorld"), HelloWorldServiceImpl.class);
+        Assert.assertTrue(helloWorld);
     }
 }
