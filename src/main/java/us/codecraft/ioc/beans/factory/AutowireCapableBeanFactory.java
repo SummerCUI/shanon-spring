@@ -23,8 +23,7 @@ public class AutowireCapableBeanFactory extends AbstractBeanFactory {
             beanFactoryAware.setBeanFactory(this);
         }
 
-        for (PropertyValue propertyValue:
-             beanDefinition.getPropertyValues().getPropertyValues()) {
+        for (PropertyValue propertyValue : beanDefinition.getPropertyValues().getPropertyValues()) {
             Object value = propertyValue.getValue();
             if(value instanceof BeanReference) {
                 BeanReference beanReference = (BeanReference) value;

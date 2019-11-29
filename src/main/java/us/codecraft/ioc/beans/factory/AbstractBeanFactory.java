@@ -4,6 +4,7 @@ import us.codecraft.ioc.beans.BeanDefinition;
 import us.codecraft.ioc.beans.BeanPostProcessor;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,11 +12,11 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author cuixianing。
  * @version v1.0.0.1。
- * @Description //TODO
+ * @Description
  * @since JDK1.8。
  * <p>创建日期：2019年11月21日 16:25。</p>
  */
-public class AbstractBeanFactory implements BeanFactory {
+public abstract class AbstractBeanFactory implements BeanFactory {
 
     private Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
 
@@ -43,21 +44,21 @@ public class AbstractBeanFactory implements BeanFactory {
             bean = beanPostProcessor.postProcessBeforeInitialization(bean, name);
         }
 
-        // TODO:call initialize method
+        // FIXME :call initialize method
         for(BeanPostProcessor beanPostProcessor : beanPostProcessors) {
             bean = beanPostProcessor.postProcessAfterInitialization(bean, name);
         }
         return bean;
     }
 
-    private Object doCreateBean(BeanDefinition beanDefinition) throws InstantiationException, IllegalAccessException {
+    private Object doCreateBean(BeanDefinition beanDefinition) throws Exception {
         Object bean = createBeanInstance(beanDefinition);
         beanDefinition.setBean(bean);
         applyPropertyValues(bean, beanDefinition);
         return bean;
     }
 
-    private void applyPropertyValues(Object bean, BeanDefinition beanDefinition) {
+    protected void applyPropertyValues(Object bean, BeanDefinition beanDefinition) throws Exception {
 
     }
 
@@ -71,8 +72,9 @@ public class AbstractBeanFactory implements BeanFactory {
     }
 
     public void preInstantiateSingletons() throws Exception {
-        for(String name : beanDefinitionNames) {
-            getBean(name);
+        for (Iterator it = this.beanDefinitionNames.iterator(); it.hasNext();) {
+            String beanName = (String) it.next();
+            getBean(beanName);
         }
     }
 
@@ -81,7 +83,7 @@ public class AbstractBeanFactory implements BeanFactory {
     }
 
     public List getBeansForType(Class type) throws Exception {
-        ArrayList<Object> beans = new ArrayList<>();
+        List<Object> beans = new ArrayList<>();
         for(String beanDefinitionName : beanDefinitionNames) {
             if(type.isAssignableFrom(beanDefinitionMap.get(beanDefinitionName).getBeanClass())) {
                 beans.add(getBean(beanDefinitionName));
